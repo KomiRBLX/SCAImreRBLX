@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta - SCAI</title>
+  <link rel="icon" href=unnamed.png type="image/png" />
+
+  <style>
+    :root {
+      --bg-light: #eef3f9;
+      --bg-dark: #1e1e2f;
+      --text-light: #2b3e50;
+      --text-dark: #f5f5f5;
+      --container-light: white;
+      --container-dark: #2c2c3f;
+      --primary: #178b20;
+      --hover-light: #f4f9ff;
+      --hover-dark: #33334d;
+    }
+
+    html[data-theme="dark"] {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    html[data-theme="dark"] .container {
+      background-color: var(--container-dark);
+      color: var(--text-dark);
+    }
+
+    html[data-theme="dark"] .doc-item {
+      background-color: var(--hover-dark);
+    }
+
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] select {
+      background: #44445a;
+      color: white;
+      border: 1px solid #666;
+    }
+
+    html[data-theme="dark"] .copy-btn {
+      background: #0062c2;
+    }
+
+    html[data-theme="dark"] .copy-btn:hover {
+      background: #004fa0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .topbar {
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+    }
+
+    .topbar .branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar img {
+      height: 32px;
+      width: 32px;
+    }
+
+    .topbar button {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .topbar button:hover {
+      background: #f0f0f0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: var(--container-light);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      transition: background 0.3s;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .search-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], select {
+      flex: 1;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+
+    .result {
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+
+    .doc-item {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 5px solid var(--primary);
+      background: var(--hover-light);
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .doc-item:hover {
+      background: #e6f2ff;
+    }
+
+    .doc-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .doc-desc {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .doc-actions {
+      margin-top: 8px;
+    }
+
+    .doc-actions a {
+      color: var(--primary);
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .copy-btn {
+      padding: 5px 10px;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #003788;
+    }
+
+    .footer {
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-radius: 0 0 15px 15px;
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+html[data-theme="dark"] .footer {
+  background-color: #003366;
+  color: #dcdcdc;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body > .container {
+  flex: 1;
+}
+
+.footer {
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 0 0 15px 15px;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Barra Superior -->
+  <div class="topbar">
+    <div class="branding">
+      <img src=unnamed.png alt="Ícone">
+      <span>Sistema de Consulta de Atos Internacionais (SCAI) - [BR] Brasil</span>
+    </div>
+    <button onclick="alternarTema()">🌗 Tema</button>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="container">
+    <h1>Consulta de Documentos</h1>
+
+    <div class="search-filter">
+      <input type="text" id="searchBox" placeholder="Buscar por nome, descrição..." />
+      <select id="typeFilter">
+        <option value="">Todos os tipos</option>
+      </select>
+    </div>
+
+    <div id="results" class="result"></div>
+  </div>
+
+  <script>
+    const searchBox = document.getElementById("searchBox");
+    const typeFilter = document.getElementById("typeFilter");
+    const resultsDiv = document.getElementById("results");
+
+    let documentos = [];
+
+    const sheetUrl = "https://opensheet.elk.sh/10A76DR9TaElEmCyaFLto-PZaeI7YOiJlAggXv7EgVA8/Dados"; // <-- troque aqui
+
+    fetch(sheetUrl)
+      .then(res => res.json())
+      .then(data => {
+        documentos = data;
+        preencherFiltro(data);
+        filtrar();
+      });
+
+    function preencherFiltro(data) {
+      const tipos = [...new Set(data.map(doc => doc.Tipo).filter(Boolean))];
+      tipos.forEach(tipo => {
+        const opt = document.createElement("option");
+        opt.value = tipo;
+        opt.textContent = tipo;
+        typeFilter.appendChild(opt);
+      });
+    }
+
+    function filtrar() {
+      const termo = searchBox.value.toLowerCase();
+      const tipoSelecionado = typeFilter.value;
+
+      const filtrados = documentos.filter(doc => {
+        const matchTexto =
+          doc.Nome?.toLowerCase().includes(termo) ||
+          doc.Descrição?.toLowerCase().includes(termo);
+        const matchTipo = tipoSelecionado === "" || doc.Tipo === tipoSelecionado;
+        return matchTexto && matchTipo;
+      });
+
+      exibirResultados(filtrados);
+    }
+
+    function exibirResultados(lista) {
+      resultsDiv.innerHTML = "";
+      if (lista.length === 0) {
+        resultsDiv.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+        return;
+      }
+
+      lista.forEach(doc => {
+        const div = document.createElement("div");
+        div.className = "doc-item";
+        div.innerHTML = `
+          <div class="doc-title">${doc.Nome}</div>
+          <div class="doc-desc">${doc.Descrição || "Sem descrição disponível."}</div>
+          <div class="doc-actions">
+            <a href="${doc.Link}" target="_blank">Abrir Documento</a>
+            <button class="copy-btn" onclick="copiarLink('${doc.Link}')">Copiar Link</button>
+          </div>
+        `;
+        resultsDiv.appendChild(div);
+      });
+    }
+
+    function copiarLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Link copiado!");
+      });
+    }
+
+    function alternarTema() {
+    const html = document.documentElement;
+    const temaAtual = html.getAttribute("data-theme");
+    const novoTema = temaAtual === "dark" ? "light" : "dark";
+    html.setAttribute("data-theme", novoTema);
+    localStorage.setItem("temaPreferido", novoTema);
+  }
+
+  // Carrega tema salvo ao abrir
+  window.addEventListener("DOMContentLoaded", () => {
+    const temaSalvo = localStorage.getItem("temaPreferido");
+    if (temaSalvo) {
+      document.documentElement.setAttribute("data-theme", temaSalvo);
+    }
+  });
+
+    searchBox.addEventListener("input", filtrar);
+    typeFilter.addEventListener("change", filtrar);
+  </script>
+</body>
+<footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 Sistema de Consulta de Atos Internacionais. Todos os direitos reservados.</p>
+      <p>Desenvolvido para a comunidade [BR] Brasil -  - @komi_</p>
+      <p>Não temos qualquer ligação com o verdadeiro Ministério das Relações Exteriores ou qualquer outra instituição real.</p>
+    </div>
+  </footer>
+</html>
